@@ -32,7 +32,6 @@ class RegisterController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -48,9 +47,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'id' => 'required|size:8|unique:users|alphanum',
+            'name' => 'required|max:255|min:5',
+            'username' => 'required|max:255|unique:users',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:8|confirmed',
         ]);
     }
 
@@ -63,9 +64,16 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
+            'id' => $data['id'],
             'name' => $data['name'],
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'authority_level' => $data['authority_level'],
+            'batch' => $data['batch'],
+            'sem' => $data['sem'],
+            'discipline_id' => $data['discipline_id'],
+            'stream_id' => $data['stream_id'],
         ]);
     }
 }

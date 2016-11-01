@@ -15,8 +15,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('mg.bmu-ags.com'),
-        'secret' => env('key-74a96268db565c3ad7fc61703e7f03b3'),
+        'domain' => env('MAILGUN_DOMAIN'),
+        'secret' => env('MAILGUN_SECRET'),
     ],
 
     'ses' => [

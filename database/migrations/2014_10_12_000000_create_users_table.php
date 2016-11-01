@@ -19,11 +19,11 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('authority_level', array(0, 1, 2));    //0 - admin, 1 - teacher, 2 - student;
-            $table->integer('batch');
-            $table->tinyInteger('sem');
-            $table->string('discipline_id');
-            $table->string('stream_id');
+            $table->enum('authority_level', array('admin', 'teacher', 'student'));
+            $table->enum('batch', array('', 2014, 2015, 2016));
+            $table->enum('sem', array('', 1, 2, 3, 4, 5, 6, 7, 8));
+            $table->enum('discipline_id', array('', 'btech', 'bba', 'bcom', 'mba'));
+            $table->enum('stream_id', array('', 'csc', 'cse', 'me', 'ece'));
             $table->rememberToken();
             $table->timestamps();
         });
