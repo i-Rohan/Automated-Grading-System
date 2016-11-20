@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Subjects;
+use App\User;
+
 class HomeController extends Controller
 {
     /**
@@ -21,16 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
-    }
+        $subjects = Subjects::all();
+        $users = User::all();
 
-//    public function mail()
-//    {
-//        $user = User::find(1)->toArray();
-//        Mail::send('emails.mailEvent', $user, function($message) use ($user) {
-//            $message->to($user->email);
-//            $message->subject('Mailgun Testing');
-//        });
-//        dd('Mail Send Successfully');
-//    }
+        return view('home')->with('subjects', $subjects)->with('users', $users);
+    }
 }

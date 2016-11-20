@@ -14,7 +14,8 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string('id', 8)->primary();
+            $table->increments('id');
+            $table->string('user_id', 8)->unique();
             $table->string('name');
             $table->string('username')->unique();
             $table->string('email')->unique();
@@ -22,8 +23,8 @@ class CreateUsersTable extends Migration
             $table->enum('authority_level', array('admin', 'teacher', 'student'));
             $table->enum('batch', array('', 2014, 2015, 2016));
             $table->enum('sem', array('', 1, 2, 3, 4, 5, 6, 7, 8));
-            $table->enum('discipline_id', array('', 'btech', 'bba', 'bcom', 'mba'));
-            $table->enum('stream_id', array('', 'csc', 'cse', 'me', 'ece'));
+            $table->enum('discipline', array('', 'btech', 'bba', 'bcom', 'mba'));
+            $table->enum('stream', array('', 'csc', 'cse', 'me', 'ece'));
             $table->rememberToken();
             $table->timestamps();
         });

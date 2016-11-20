@@ -19,8 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 
-Auth::routes();
+Route::get('/teacher/subject/{id}', ['as' => 'teacher.subject.show', 'uses' => 'TeacherSubjectController@show']);
 
-Route::get('/home', 'HomeController@index');
+Route::get('/teacher/subject/{id}/add', ['as' => 'teacher.add.show', 'uses' => 'AddAssessmentController@show']);
 
-//Route::get('mail', 'HomeController@mail');
+Route::post('/teacher/subject/{id}/add', ['as' => 'teacher.add.create', 'uses' => 'AddAssessmentController@create']);

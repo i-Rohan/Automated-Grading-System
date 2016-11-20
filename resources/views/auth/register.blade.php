@@ -10,14 +10,15 @@
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                             {{ csrf_field() }}
 
-                            <div class="form-group{{ $errors->has('id') ? ' has-error' : '' }}">
-                                <label for="id" class="col-md-4 control-label">ID</label>
+                            <div class="form-group{{ $errors->has('user_id') ? ' has-error' : '' }}">
+                                <label for="user_id" class="col-md-4 control-label">ID</label>
                                 <div class="col-md-6">
-                                    <input id="id" type="text" class="form-control" name="id" value="{{ old('id') }}"
+                                    <input id="user_id" type="text" class="form-control" name="user_id"
+                                           value="{{ old('user_id') }}"
                                            required autofocus>
-                                    @if ($errors->has('id'))
+                                    @if ($errors->has('user_id'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('id') }}</strong>
+                                        <strong>{{ $errors->first('user_id') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -140,11 +141,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="discipline_id" class="col-md-4 control-label">Discipline</label>
+                                <label for="discipline" class="col-md-4 control-label">Discipline</label>
                                 <div class="col-md-6">
                                     <label>
-                                        <select id="discipline_id" name="discipline_id" class="form-control"
-                                                value="{{ old('discipline_id') }}" required>
+                                        <select id="discipline" name="discipline" class="form-control"
+                                                value="{{ old('discipline') }}" required>
                                             <option value=""></option>
                                             <option value="">N/A</option>
                                             <option value="btech">B.Tech</option>
@@ -156,12 +157,12 @@
                                 </div>
                             </div>
 
-                            <div class="form-group{{ $errors->has('stream_id') ? ' has-error' : '' }}">
-                                <label for="stream_id" class="col-md-4 control-label">Stream</label>
+                            <div class="form-group{{ $errors->has('stream') ? ' has-error' : '' }}">
+                                <label for="stream" class="col-md-4 control-label">Stream</label>
                                 <div class="col-md-6">
                                     <label>
-                                        <select id="stream_id" name="stream_id" class="form-control"
-                                                value="{{ old('stream_id') }}" required>
+                                        <select id="stream" name="stream" class="form-control"
+                                                value="{{ old('stream') }}" required>
                                             <option value=""></option>
                                             <option value="">N/A</option>
                                             <option value="csc">CSC</option>
