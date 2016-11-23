@@ -17,10 +17,28 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 
-Route::get('/teacher/subject/{id}', ['as' => 'teacher.subject.show', 'uses' => 'TeacherSubjectController@show']);
+Route::get('/home/teacher/subject/{subject_id}_{stream}', ['as' => 'teacher.subject.show', 'uses' =>
+    'TeacherSubjectController@show']);
 
-Route::get('/teacher/subject/{id}/add', ['as' => 'teacher.add.show', 'uses' => 'AddAssessmentController@show']);
+Route::get('/home/teacher/subject/{subject_id}_{stream}/add_assessment', ['as' => 'teacher.add_assessment.show',
+    'uses' => 'AddAssessmentController@show']);
 
-Route::post('/teacher/subject/{id}/add', ['as' => 'teacher.add.create', 'uses' => 'AddAssessmentController@create']);
+Route::post('/home/teacher/subject/{id}/add_assessment', ['as' => 'teacher.add_assessment.create',
+    'uses' => 'AddAssessmentController@create']);
+
+Route::get('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_id}', ['as' => 'teacher.assessment.show',
+    'uses' => 'AssessmentController@show']);
+
+Route::post('/home/teacher/subject/{id1}/assessment/{id2}', ['as' => 'teacher.assessment.create',
+    'uses' => 'AssessmentController@create']);
+
+Route::get('/home/admin/add_subject', ['as' => 'admin.add_subject', 'uses' => 'AddSubjectController@index']);
+
+Route::post('/home/admin/add_subject', ['as' => 'admin.add_subject.create', 'uses' => 'AddSubjectController@create']);
+
+Route::post('/home/teacher/subject/add_marks', ['as' => 'teacher.add_marks.create',
+    'uses' => 'AddOrEditMarksController@create']);
+
+Route::get('/home/student/subject/{subject_id}', ['as' => 'student.subject.show', 'uses' => 'StudentSubjectController@show']);

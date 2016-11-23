@@ -15,7 +15,7 @@ class TeacherSubjectController extends Controller
      */
     public function __construct()
     {
-//
+        $this->middleware('auth');
     }
 
     /**
@@ -28,11 +28,11 @@ class TeacherSubjectController extends Controller
         return view('teacher.subject');
     }
 
-    public function show($id)
+    public function show($subject_id, $stream)
     {
-        $subject = Subjects::where('id', $id)->get(array('id', 'subject_id', 'subject_name', 'teacher_id', 'discipline',
+        $subject = Subjects::where('id', $subject_id)->get(array('id', 'subject_name', 'teacher_id', 'discipline',
             'stream', 'sem', 'batch'))->first();
         $assessments = Assessments::all();
-        return view('teacher.subject')->with('subject', $subject)->with('assessments', $assessments);
+        return view('teacher.subject')->with('subject', $subject)->with('assessments', $assessments)->with('stream', $stream);
     }
 }

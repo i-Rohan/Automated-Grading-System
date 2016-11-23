@@ -19,6 +19,8 @@
                 'csrfToken' => csrf_token(),
         ]); ?>
     </script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -36,7 +38,7 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ URL::to('/')}}/login">
                     {{ config('app.name', 'Laravel') }}
                 </a>
             </div>
@@ -58,7 +60,6 @@
                         </li>
                     @endif
                 </ul>
-
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
@@ -69,7 +70,6 @@
                                aria-expanded="false">
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
-
                             <ul class="dropdown-menu" role="menu">
                                 <li>
                                     <a href="{{ url('/logout') }}"
@@ -77,7 +77,6 @@
                                                      document.getElementById('logout-form').submit();">
                                         Logout
                                     </a>
-
                                     <form id="logout-form" action="{{ url('/logout') }}" method="POST"
                                           style="display: none;">
                                         {{ csrf_field() }}
@@ -90,7 +89,6 @@
             </div>
         </div>
     </nav>
-
     @yield('content')
 </div>
 

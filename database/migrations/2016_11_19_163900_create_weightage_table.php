@@ -15,11 +15,10 @@ class CreateWeightageTable extends Migration
     {
         Schema::create('weightage', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('subject_id', 8);
+            $table->integer('subject_id');
             $table->string('assessment_name');
             $table->integer('weightage');
             $table->integer('max_marks');
-            $table->unique(array('id', 'subject_id'));
             $table->timestamps();
         });
     }

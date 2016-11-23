@@ -25,14 +25,14 @@ class AddAssessmentController extends Controller
      */
     public function index()
     {
-        return view('teacher.add');
+        return view('teacher.add_assessment');
     }
 
-    public function show($id)
+    public function show($subject_id, $stream)
     {
-        $subject = Subjects::where('id', $id)->get(array('id', 'subject_id', 'subject_name', 'teacher_id', 'discipline',
+        $subject = Subjects::where('id', $subject_id)->get(array('id', 'subject_name', 'teacher_id', 'discipline',
             'stream', 'sem', 'batch'))->first();
-        return view('teacher.add')->with('subject', $subject);
+        return view('teacher.add_assessment')->with('subject', $subject)->with('stream', $stream);
     }
 
     /**
@@ -55,6 +55,6 @@ class AddAssessmentController extends Controller
         $assessment->weightage = $request->weightage;
         $assessment->max_marks = $request->max_marks;
         $assessment->save();
-        return redirect()->route('teacher.subject.show', $request->id);
+        return redirect()->route('teacher.subject.show', array($request->id, $request->stream))->with('message', 'Successfully Added!');
     }
 }

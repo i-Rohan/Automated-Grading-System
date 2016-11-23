@@ -41,18 +41,25 @@
                         @endif
                         Semester
                         <br>
-                        {{strtoupper($subject->discipline)}} {{strtoupper($subject->stream)}}
+                        {{strtoupper($subject->discipline)}} {{strtoupper($stream)}}
                     </div>
                 </div>
             </div>
         </div>
+        @if(Session::has('message'))
+            <div class="margin" align="center">
+                <div class="alert alert-info">
+                    {{ Session::get('message') }}
+                </div>
+            </div>
+        @endif
         <div class="margin">
             <div class="panel panel-default">
                 <div class="panel-heading" align="center">Assessments</div>
                 <div class="panel-body" align="center">
                     @foreach($assessments as $assessment)
-                        @if($assessment->subject_id==$subject->subject_id)
-                            <a href="#">
+                        @if($assessment->subject_id==$subject->id)
+                            <a href="{{ route('teacher.assessment.show', array( 'subject_id'=>$subject->id,'assessment_id' => $assessment->id,'stream'=>$stream)) }}">
                                 <div class="panel panel-subject" align="center">
                                     <div class="subject-name">
                                         {{$assessment->assessment_name}}
@@ -70,7 +77,7 @@
             </div>
         </div>
         <div align="center">
-            <a href="{{ route('teacher.add.show', array( 'id' => $subject->id)) }}">
+            <a href="{{ route('teacher.add_assessment.show', array( 'subject_id' => $subject->id,'stream'=>$stream)) }}">
                 <div class="panel panel-subject" align="center">
                     <div class="subject-name">
                         Add Assessment

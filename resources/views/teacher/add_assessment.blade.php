@@ -1,15 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        div.margin {
-            margin: 10px 250px 100px;
-        }
-    </style>
     <div align="center">
         <img src="{{URL::to('/')}}/images/bmu_logo.png" alt="BMU Logo" class="img-responsive" height="150"
              width="150"/>
     </div>
+    <script>
+        console.log("{{Auth::user()}}");
+    </script>
     @if(Auth::user()->authority_level!="teacher")
         <br>
         <br>
@@ -28,15 +26,15 @@
                         <div class="panel-heading">Add Assessment</div>
                         <div class="panel-body">
                             <form class="form-horizontal" role="form" method="POST"
-                                  action="{{URL::to('/teacher/subject/')}}/{{$subject->id}}/add">
+                                  action="{{URL::to('home/teacher/subject/')}}/{{$subject->id}}/add_assessment">
                                 {{ csrf_field() }}
                                 <div class="form-group">
                                     <input type="hidden" id="subject_id" class="form-control" name="subject_id"
-                                           value="{{$subject->subject_id}}">
+                                           value="{{$subject->id}}">
                                 </div>
                                 <div class="form-group">
-                                    <input type="hidden" id="id" class="form-control" name="id"
-                                           value="{{$subject->id}}">
+                                    <input type="hidden" id="stream" class="form-control" name="stream"
+                                           value="{{$stream}}">
                                 </div>
                                 <div class="form-group{{ $errors->has('assessment_name') ? ' has-error' : '' }}">
                                     <label for="assessment_name" class="col-md-4 control-label">Assessment Name</label>
