@@ -6,6 +6,7 @@ use App\Assessments;
 use App\Marks;
 use App\Subjects;
 use Illuminate\Http\Request;
+use Log;
 
 class AddOrEditAssessmentController extends Controller
 {
@@ -60,8 +61,8 @@ class AddOrEditAssessmentController extends Controller
 
     protected function delete(Request $request)
     {
-        echo(Assessments::where('id', $request->assessment_id)->delete());
-        echo(Marks::where('assessment_id', $request->assessment_id)->delete());
-        return redirect()->route('teacher.assessment.show', array($request->subject_id, $request->stream, $request->assessment_id))->with('message', 'Successfully Deleted!');
+        Assessments::where('id', $request->assessment_id)->delete();
+        Marks::where('assessment_id', $request->assessment_id)->delete();
+        return redirect()->route('teacher.subject.show', array($request->subject_id, $request->stream))->with('message', 'Successfully Deleted!');
     }
 }

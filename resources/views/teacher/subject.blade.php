@@ -101,6 +101,14 @@
                     </div>
                 </div>
             </a>
+            <a href="{{route('teacher.overall',array('subject_id'=>$subject->id,'stream'=>$stream))}}">
+                <div class="panel panel-subject" align="center"
+                     style="background-color: {{$color_array[$random_color]}}; border-color: {{$color_array[$random_color]}}">
+                    <div class="subject-name">
+                        View Overall Result
+                    </div>
+                </div>
+            </a>
         </div>
     @endif
 @endsection
