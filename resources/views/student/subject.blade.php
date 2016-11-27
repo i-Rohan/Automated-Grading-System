@@ -6,10 +6,10 @@
             margin: 5px 50px 25px;
         }
     </style>
-    <div align="center">
-        <img src="{{URL::to('/')}}/images/bmu_logo.png" alt="BMU Logo" class="img-responsive" height="150"
-             width="150"/>
-    </div>
+    {{--<div align="center">--}}
+    {{--<img src="{{URL::to('/')}}/images/bmu_logo.png" alt="BMU Logo" class="img-responsive" height="150"--}}
+    {{--width="150"/>--}}
+    {{--</div>--}}
     @if(Auth::user()->authority_level!="student")
         <br>
         <br>
@@ -28,20 +28,7 @@
                 </div>
                 <div class="teacher-name">
                     <div class="teacher-name">
-                        {{$subject->batch}} Batch
-                        <br>
-                        @if($subject->sem==1)
-                            {{$subject->sem}}st
-                        @elseif($subject->sem==2)
-                            {{$subject->sem}}nd
-                        @elseif($subject->sem==3)
-                            {{$subject->sem}}rd
-                        @else
-                            {{$subject->sem}}th
-                        @endif
-                        Semester
-                        <br>
-                        {{strtoupper($subject->discipline)}} {{strtoupper($stream)}}
+                        {{$teacher->name}}
                     </div>
                 </div>
             </div>

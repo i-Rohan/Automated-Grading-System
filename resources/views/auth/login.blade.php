@@ -5,7 +5,8 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div align="center">
-                    <img src="{{URL::to('/')}}/images/bmu_logo.png" alt="BMU Logo" class="img-responsive"/>
+                    <img src="{{URL::to('/')}}/images/bmu_logo.png" alt="BMU Logo"
+                         class="img-responsive"/>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">Login</div>

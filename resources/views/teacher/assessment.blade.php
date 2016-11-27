@@ -21,9 +21,16 @@
             </a>
         </div>
     @else
-        <?php $count = 0;?>
+        <?php $color_array = array('#1abc9c', '#2ecc71', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c');
+        $random_color = rand(0, count($color_array) - 1);
+        $count = 0;?>
         <div align="center">
-            <div class="panel panel-subject" align="center">
+            <a href="{{route('teacher.subject.show',array('subject_id'=>$subject->id,'stream'=>$stream))}}">Go back to
+                assessments
+                page.</a></div>
+        <div align="center">
+            <div class="panel panel-subject" align="center"
+                 style="background-color: {{$color_array[$random_color]}}; border-color: {{$color_array[$random_color]}}">
                 <div class="subject-name">
                     {{$assessment->assessment_name}}
                 </div>
@@ -75,10 +82,10 @@
                                                 <?php $temp = 0;
                                                 for ($i = 0; $i < count($marks); $i++) {
                                                     if ($marks[$i]->batch == $user->batch &&
-                                                            $marks[$i]->sem == $user->sem &&
-                                                            $marks[$i]->stream == $user->stream &&
-                                                            $assessment->id == $marks[$i]->assessment_id &&
-                                                            $marks[$i]->student_id == $user->id
+                                                        $marks[$i]->sem == $user->sem &&
+                                                        $marks[$i]->stream == $user->stream &&
+                                                        $assessment->id == $marks[$i]->assessment_id &&
+                                                        $marks[$i]->student_id == $user->id
                                                     ) {
                                                         $temp = $marks[$i]->marks;
                                                     }
@@ -105,13 +112,30 @@
             </div>
         </div>
         <div align="center">
-            <a href="#">
-                <div class="panel panel-subject" align="center">
+            <a href="{{route('teacher.edit_assessment',array('subject_id'=>$subject->id,'stream'=>$stream,'assessment_id'=>$assessment->id))}}">
+                <div class="panel panel-subject" align="center"
+                     style="background-color: {{$color_array[$random_color]}}; border-color: {{$color_array[$random_color]}}">
                     <div class="subject-name">
                         Edit Assessment
                     </div>
                 </div>
             </a>
+            <form role="form" method="POST"
+                  action="{{URL::to('home/teacher/subject/')}}/{{$subject->id}}_{{$stream}}/assessment/{{$assessment->id}}/delete">
+                {{ csrf_field() }}
+                <input type="hidden" class="form-control" name="assessment_id" id="assessment_id"
+                       value="{{$assessment->assessment_id}}" style="visibility: hidden;">
+                <input type="hidden" class="form-control" name="stream" id="stream"
+                       value="{{$stream}}" style="visibility: hidden;">
+                <input type="hidden" id="subject_id" class="form-control" name="subject_id"
+                       value="{{$subject->id}}" style="visibility: hidden;">
+                <button type="submit" class="panel panel-subject"
+                        style="background-color: {{$color_array[$random_color]}}; border-color: {{$color_array[$random_color]}}">
+                    <div class="subject-name">
+                        Delete Assessment
+                    </div>
+                </button>
+            </form>
         </div>
     @endif
 @endsection

@@ -15,13 +15,16 @@
             <div class="panel panel-default">
                 <div class="panel-heading" align="center">Your Courses</div>
                 <div class="panel-body" align="center">
+                    <?php $color_array = array('#1abc9c', '#2ecc71', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c');
+                    $color = 0?>
                     @foreach($subjects as $subject)
                         @if($subject->sem==Auth::user()->sem and $subject->discipline==Auth::user()->discipline and
                         $subject->batch==Auth::user()->batch)
                             @foreach(json_decode((html_entity_decode($subject->stream, true))) as $stream)
                                 @if($stream==Auth::user()->stream)
-                                    <a href="#">
-                                        <div class="panel panel-subject" align="center">
+                                    <a href="{{ route('student.subject', array( 'subject_id'=>$subject->id))}}">
+                                        <div class="panel panel-subject" align="center"
+                                             style="background-color: {{$color_array[$color]}}; border-color: {{$color_array[$color]}}">
                                             <div class="subject-name">
                                                 {{$subject->subject_name}}
                                             </div>
@@ -34,6 +37,12 @@
                                             </div>
                                         </div>
                                     </a>
+                                    <?php
+                                    if ($color == count($color_array) - 1)
+                                        $color = 0;
+                                    else
+                                        $color++;
+                                    ?>
                                 @endif
                             @endforeach
                         @endif
@@ -46,11 +55,14 @@
             <div class="panel panel-default">
                 <div class="panel-heading" align="center">Your Subjects</div>
                 <div class="panel-body" align="center">
+                    <?php $color_array = array('#1abc9c', '#2ecc71', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c');
+                    $color = 0?>
                     @foreach($subjects as $subject)
                         @if($subject->teacher_id==Auth::user()->id)
                             @foreach(json_decode((html_entity_decode($subject->stream, true))) as $stream)
                                 <a href="{{ route('teacher.subject.show', array( 'subject_id' => $subject->id,'stream'=>$stream)) }}">
-                                    <div class="panel panel-subject" align="center">
+                                    <div class="panel panel-subject" align="center"
+                                         style="background-color: {{$color_array[$color]}}; border-color: {{$color_array[$color]}}">
                                         <div class="subject-name">
                                             {{$subject->subject_name}}
                                         </div>
@@ -72,6 +84,12 @@
                                         </div>
                                     </div>
                                 </a>
+                                <?php
+                                if ($color == count($color_array) - 1)
+                                    $color = 0;
+                                else
+                                    $color++;
+                                ?>
                             @endforeach
                         @endif
                     @endforeach

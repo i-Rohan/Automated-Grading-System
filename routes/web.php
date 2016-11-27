@@ -23,10 +23,10 @@ Route::get('/home/teacher/subject/{subject_id}_{stream}', ['as' => 'teacher.subj
     'TeacherSubjectController@show']);
 
 Route::get('/home/teacher/subject/{subject_id}_{stream}/add_assessment', ['as' => 'teacher.add_assessment.show',
-    'uses' => 'AddAssessmentController@show']);
+    'uses' => 'AddOrEditAssessmentController@show']);
 
 Route::post('/home/teacher/subject/{id}/add_assessment', ['as' => 'teacher.add_assessment.create',
-    'uses' => 'AddAssessmentController@create']);
+    'uses' => 'AddOrEditAssessmentController@create']);
 
 Route::get('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_id}', ['as' => 'teacher.assessment.show',
     'uses' => 'AssessmentController@show']);
@@ -41,4 +41,10 @@ Route::post('/home/admin/add_subject', ['as' => 'admin.add_subject.create', 'use
 Route::post('/home/teacher/subject/add_marks', ['as' => 'teacher.add_marks.create',
     'uses' => 'AddOrEditMarksController@create']);
 
-Route::get('/home/student/subject/{subject_id}', ['as' => 'student.subject.show', 'uses' => 'StudentSubjectController@show']);
+Route::get('/home/student/subject/{subject_id}', ['as' => 'student.subject', 'uses' => 'StudentSubjectController@show']);
+
+Route::get('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_id}/edit', ['as' => 'teacher.edit_assessment', 'uses' => 'AddOrEditAssessmentController@showEdit']);
+
+Route::post('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_id}/edit', ['as' => 'teacher.edit_assessment.edit', 'uses' => 'AddOrEditAssessmentController@edit']);
+
+Route::post('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_id}/delete', ['as' => 'teacher.edit_assessment.delete', 'uses' => 'AddOrEditAssessmentController@delete']);
