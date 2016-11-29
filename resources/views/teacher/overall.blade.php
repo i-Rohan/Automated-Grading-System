@@ -21,7 +21,8 @@
             </a>
         </div>
     @else
-        <?php $color_array = array('#1abc9c', '#2ecc71', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c');
+        <?php $color_array = array('#16a085', '#2980b9', '#2c3e50', '#f39c12', '#c0392b', '#7f8c8d', '#27ae60',
+            '#8e44ad', '#d35400', '#bdc3c7');
         $random_color = rand(0, count($color_array) - 1);
         ?>
         <div align="center">
@@ -62,13 +63,26 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">Overall Result</div>
                             <div class="panel-body" align="left">
-                                <label class="col-md-4 control-label">Name</label>
-                                <label class="col-md-6">Marks</label>
+                                <label class="col-md-3">
+                                    <div style="font-weight: bolder; color: black">
+                                        Name
+                                    </div>
+                                </label>
+                                <label class="col-md-3">
+                                    <div style="font-weight: bolder; color: black">
+                                        Marks
+                                    </div>
+                                </label>
+                                <label class="col-md-3">
+                                    <div style="font-weight: bolder; color: black">
+                                        Percentage
+                                    </div>
+                                </label>
                                 <br>
                                 <br>
                                 @foreach($students as $student)
                                     <div style="background-color: white; border-color: #3498db">
-                                        <label class="col-md-4 control-label">{{$student->name}}</label>
+                                        <label class="col-md-3">{{$student->name}}</label>
                                         <?php
                                         $temp = 0;
                                         $total = 0;
@@ -83,13 +97,23 @@
                                             }
                                         }
                                         ?>
-                                        <label class="col-md-6">{{$temp}}/{{$total}}</label>
+                                        <label class="col-md-3">{{$temp}}/{{$total}}</label>
+                                        <?php
+                                        if ($total != 0)
+                                            $temp = $temp / $total * 100;
+                                        else
+                                            $temp = 0;
+                                        ?>
+                                        <label class="col-md-3">{{$temp}}%</label>
                                     </div>
+                                    <br>
+                                    <br>
                                 @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     @endif
 @endsection

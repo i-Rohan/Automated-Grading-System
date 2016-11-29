@@ -97,6 +97,13 @@
             </div>
         </div>
     @else
+        @if(Session::has('message'))
+            <div class="margin" align="center">
+                <div class="alert alert-info">
+                    {{ Session::get('message') }}
+                </div>
+            </div>
+        @endif
         <div class="margin">
             <div class="panel panel-default">
                 <div class="panel-heading" align="center">Available Actions</div>

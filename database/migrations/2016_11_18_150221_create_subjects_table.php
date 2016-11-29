@@ -21,7 +21,7 @@ class CreateSubjectsTable extends Migration
             $table->string('stream');
             $table->string('subject_name');
             $table->string('teacher_id', 8);
-            $table->unique(array('batch', 'sem', 'discipline', 'stream'));
+            $table->integer('credits');
             $table->timestamps();
         });
     }

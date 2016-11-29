@@ -19,6 +19,13 @@
             </a>
         </div>
     @else
+        @if(Session::has('message'))
+            <div align="center">
+                <div class="alert alert-info">
+                    {{ Session::get('message') }}
+                </div>
+            </div>
+        @endif
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -122,6 +129,19 @@
                                         <input type="checkbox" name="stream[]" value="ce"
                                                class="form-control">CE
                                     </label>
+                                </div>
+
+                                <div class="form-group{{ $errors->has('credits') ? ' has-error' : '' }}">
+                                    <label for="credits" class="col-md-4 control-label">Credits</label>
+                                    <div class="col-md-6">
+                                        <input id="credits" type="number" class="form-control" name="credits"
+                                               value="{{ old('credits') }}" required min="0" max="100">
+                                        @if ($errors->has('credits'))
+                                            <span class="help-block">
+                                        <strong>{{ $errors->first('credits') }}</strong>
+                                    </span>
+                                        @endif
+                                    </div>
                                 </div>
 
                                 <div class="form-group">

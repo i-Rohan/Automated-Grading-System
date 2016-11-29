@@ -61,6 +61,7 @@ class AddOrEditAssessmentController extends Controller
 
     protected function delete(Request $request)
     {
+        Log::info($request->assessment_id);
         Assessments::where('id', $request->assessment_id)->delete();
         Marks::where('assessment_id', $request->assessment_id)->delete();
         return redirect()->route('teacher.subject.show', array($request->subject_id, $request->stream))->with('message', 'Successfully Deleted!');

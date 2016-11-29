@@ -2,28 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Assessments;
 use App\Subjects;
 use App\User;
 use Illuminate\Http\Request;
 
 class AddSubjectController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
-     */
     public function index()
     {
         $teachers = User::where('authority_level', 'teacher')->orderBy('name')->get(array('id', 'name'));
@@ -31,13 +20,6 @@ class AddSubjectController extends Controller
         return view('admin.add_subject')->with('teachers', $teachers)->with('subject_ids', $subject_ids);
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param Request $request
-     * @return Assessments
-     * @internal param array $data
-     */
     protected function create(Request $request)
     {
         $this->validate($request, array(
@@ -50,7 +32,8 @@ class AddSubjectController extends Controller
         $subject->sem = $request->sem;
         $subject->stream = json_encode($request->stream);
         $subject->teacher_id = $request->teacher_id;
+        $subject->credits = $request->credits;
         $subject->save();
-        return redirect()->route('home');
+        return redirect()->route('home')->with('message','Successfully added!');
     }
 }

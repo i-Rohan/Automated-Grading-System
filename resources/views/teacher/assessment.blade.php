@@ -124,7 +124,7 @@
                   action="{{URL::to('home/teacher/subject/')}}/{{$subject->id}}_{{$stream}}/assessment/{{$assessment->id}}/delete">
                 {{ csrf_field() }}
                 <input type="hidden" class="form-control" name="assessment_id" id="assessment_id"
-                       value="{{$assessment->assessment_id}}" style="visibility: hidden;">
+                       value="{{$assessment->id}}" style="visibility: hidden;">
                 <input type="hidden" class="form-control" name="stream" id="stream"
                        value="{{$stream}}" style="visibility: hidden;">
                 <input type="hidden" id="subject_id" class="form-control" name="subject_id"
