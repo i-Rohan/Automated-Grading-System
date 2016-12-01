@@ -25,15 +25,13 @@ class OverallController extends Controller
     {
         $subject = Subjects::where('id', $subject_id)->get(array('id', 'subject_name', 'teacher_id', 'discipline',
             'stream', 'sem', 'batch'))->first();
-        Log::info($subject);
         $assessments = Assessments::where('subject_id', $subject_id)->get();
-        Log::info($assessments);
         $marks = Marks::where('subject_id', $subject_id)->get();
-        Log::info($marks);
         $students = User::where(array('stream' => $stream, 'batch' => $subject->batch,
             'sem' => $subject->sem))->orderBy('name')->get();
-        Log::info($students);
+        $all_subject_students = User::where(array('batch' => $subject->batch, 'sem' => $subject->sem))->get();
+        Log::info(count($all_subject_students));
         return view('teacher.overall')->with('subject', $subject)->with('stream', $stream)->with('assessments',
-            $assessments)->with('marks', $marks)->with('students', $students);
+            $assessments)->with('marks', $marks)->with('students', $students)->with('all_subject_students', $all_subject_students);
     }
 }

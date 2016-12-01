@@ -24,6 +24,35 @@
         <?php $color_array = array('#16a085', '#2980b9', '#2c3e50', '#f39c12', '#c0392b', '#7f8c8d', '#27ae60',
             '#8e44ad', '#d35400', '#bdc3c7');
         $random_color = rand(0, count($color_array) - 1);
+
+        // Function to calculate square of value - mean
+        function sd_square($x, $mean)
+        {
+            return pow($x - $mean, 2);
+        }
+
+        // Function to calculate standard deviation (uses sd_square)
+        function sd($array)
+        {
+            // square root of sum of squares devided by N-1
+            return sqrt(array_sum(array_map("sd_square", $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
+        }
+
+        $percentage_array = [];
+        for ($i = 0; $i < count($all_subject_students); $i++) {
+            $mark = 0.0;
+            $total = 0.0;
+            for ($j = 0; $j < count($marks); $j++)
+                for ($k = 0; $k < count($assessments); $k++)
+                    if ($marks[$j]->student_id == $all_subject_students[$i]->id and $marks[$j]->assessment_id == $assessments[$k]->id) {
+                        $mark += $marks[$j]->marks;
+                        $total += $assessments[$k]->max_marks;
+                    }
+            $percentage = $mark / $total * 100;
+            array_push($percentage_array, $percentage);
+        }
+        $mean = array_sum($percentage_array) / count($percentage_array);
+        $stdev = sd($percentage_array);
         ?>
         <div align="center">
             <div class="panel panel-subject" align="center"
@@ -78,6 +107,11 @@
                                         Percentage
                                     </div>
                                 </label>
+                                <label class="col-md-3">
+                                    <div style="font-weight: bolder; color: black">
+                                        Grade
+                                    </div>
+                                </label>
                                 <br>
                                 <br>
                                 @foreach($students as $student)
@@ -86,16 +120,20 @@
                                         <?php
                                         $temp = 0;
                                         $total = 0;
+                                        $count = 0;
                                         for ($i = 0; $i < count($marks); $i++) {
-                                            if ($marks[$i]->student_id == $student->id) {
-                                                for ($j = 0; $j < count($assessments); $j++) {
+
+                                            for ($j = 0; $j < count($assessments); $j++) {
+                                                if ($marks[$i]->student_id == $student->id) {
                                                     if ($marks[$i]->assessment_id == $assessments[$j]->id) {
                                                         $temp += $marks[$i]->marks / $assessments[$j]->max_marks * $assessments[$j]->weightage;
                                                         $total += $assessments[$j]->weightage;
                                                     }
+                                                } else {
                                                 }
                                             }
                                         }
+
                                         ?>
                                         <label class="col-md-3">{{$temp}}/{{$total}}</label>
                                         <?php
@@ -105,6 +143,24 @@
                                             $temp = 0;
                                         ?>
                                         <label class="col-md-3">{{$temp}}%</label>
+                                        <?php
+                                        $grade = "";
+                                        if ($temp >= $mean + 1.5 * $stdev)
+                                            $grade = "A+";
+                                        else if ($mean + 1.5 * $stdev > $temp and $temp >= $mean + 0.5 * $stdev)
+                                            $grade = "A";
+                                        else if ($mean + 0.5 * $stdev > $temp and $temp >= $mean)
+                                            $grade = "B+";
+                                        else if ($mean > $temp and $temp >= $mean - 0.5 * $stdev)
+                                            $grade = "B";
+                                        else if ($mean - 0.5 * $stdev > $temp and $temp >= $mean - $stdev)
+                                            $grade = "C";
+                                        else if ($mean = $stdev > $temp and $temp >= $mean - 1.5 * $stdev)
+                                            $grade = "D";
+                                        else
+                                            $grade = "F";
+                                        ?>
+                                        <label class="col-md-3">{{$grade}}</label>
                                     </div>
                                     <br>
                                     <br>
