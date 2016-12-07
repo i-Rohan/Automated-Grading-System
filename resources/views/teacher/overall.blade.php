@@ -34,8 +34,8 @@
         // Function to calculate standard deviation (uses sd_square)
         function sd($array)
         {
-            // square root of sum of squares devided by N-1
-            return sqrt(array_sum(array_map("sd_square", $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
+            // square root of sum of squares divided by N
+            return sqrt(array_sum(array_map("sd_square", $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array)));
         }
 
         $percentage_array = [];
@@ -51,8 +51,28 @@
             $percentage = $mark / $total * 100;
             array_push($percentage_array, $percentage);
         }
-        $mean = array_sum($percentage_array) / count($percentage_array);
-        $stdev = sd($percentage_array);
+        sort($percentage_array);
+        $count = count($percentage_array);
+
+        $percentage_array_without_failures = [];
+        for ($i = 0; $i < count($percentage_array); $i++)
+            if ($percentage_array[$i] >= 40)
+                array_push($percentage_array_without_failures, $percentage_array[$i]);
+
+        $first = round(.25 * ($count + 1)) - 1;
+        $second = ($count % 2 == 0) ? ($percentage_array[($count / 2) - 1] + $percentage_array[$count / 2]) / 2 : $second = $percentage_array[($count + 1) / 2];
+        $third = round(.75 * ($count + 1)) - 1;
+        $iqr = $percentage_array[$third] - $percentage_array[$first];
+        $start = $percentage_array[$first] - 1.5 * $iqr;
+        $stop = $percentage_array[$third] + 1.5 * $iqr;
+
+        $percentage_array_without_outliers = [];
+        for ($i = 0; $i < count($percentage_array_without_failures); $i++)
+            if ($percentage_array_without_failures[$i] >= $start and $percentage_array_without_failures[$i] <= $stop)
+                array_push($percentage_array_without_outliers, $percentage_array_without_failures[$i]);
+
+        $mean = array_sum($percentage_array_without_outliers) / count($percentage_array_without_outliers);
+        $stdev = sd($percentage_array_without_outliers);
         ?>
         <div align="center">
             <div class="panel panel-subject" align="center"
@@ -99,11 +119,6 @@
                                 </label>
                                 <label class="col-md-3">
                                     <div style="font-weight: bolder; color: black">
-                                        Marks
-                                    </div>
-                                </label>
-                                <label class="col-md-3">
-                                    <div style="font-weight: bolder; color: black">
                                         Percentage
                                     </div>
                                 </label>
@@ -118,11 +133,10 @@
                                     <div style="background-color: white; border-color: #3498db">
                                         <label class="col-md-3">{{$student->name}}</label>
                                         <?php
-                                        $temp = 0;
-                                        $total = 0;
-                                        $count = 0;
+                                        $temp = 0.0;
+                                        $total = 0.0;
+                                        $count = 0.0;
                                         for ($i = 0; $i < count($marks); $i++) {
-
                                             for ($j = 0; $j < count($assessments); $j++) {
                                                 if ($marks[$i]->student_id == $student->id) {
                                                     if ($marks[$i]->assessment_id == $assessments[$j]->id) {
@@ -133,14 +147,8 @@
                                                 }
                                             }
                                         }
-
-                                        ?>
-                                        <label class="col-md-3">{{$temp}}/{{$total}}</label>
-                                        <?php
                                         if ($total != 0)
                                             $temp = $temp / $total * 100;
-                                        else
-                                            $temp = 0;
                                         ?>
                                         <label class="col-md-3">{{$temp}}%</label>
                                         <?php
@@ -155,9 +163,9 @@
                                             $grade = "B";
                                         else if ($mean - 0.5 * $stdev > $temp and $temp >= $mean - $stdev)
                                             $grade = "C";
-                                        else if ($mean = $stdev > $temp and $temp >= $mean - 1.5 * $stdev)
-                                            $grade = "D";
                                         else
+                                            $grade = "D";
+                                        if ($temp < 40)
                                             $grade = "F";
                                         ?>
                                         <label class="col-md-3">{{$grade}}</label>

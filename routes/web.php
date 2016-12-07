@@ -52,5 +52,5 @@ Route::post('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_
 Route::post('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_id}/delete',
     ['as' => 'teacher.edit_assessment.delete', 'uses' => 'AddOrEditAssessmentController@delete']);
 
-Route::get('/home/teacher/subject/{subject_id}_{stream}/overall',['as'=>'teacher.overall',
+Route::get('/home/teacher/subject/{subject_id}_{stream}/overall', ['as' => 'teacher.overall',
     'uses' => 'OverallController@show']);
