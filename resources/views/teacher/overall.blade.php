@@ -21,9 +21,17 @@
             </a>
         </div>
     @else
-        <?php $color_array = array('#16a085', '#2980b9', '#2c3e50', '#f39c12', '#c0392b', '#7f8c8d', '#27ae60',
-            '#8e44ad', '#d35400', '#bdc3c7');
+        <?php
+        $color_array = array('#16a085', '#27ae60', '#2980b9');
         $random_color = rand(0, count($color_array) - 1);
+
+        $count_Aplus = 0;
+        $count_A = 0;
+        $count_Bplus = 0;
+        $count_B = 0;
+        $count_C = 0;
+        $count_D = 0;
+        $count_F = 0;
 
         // Function to calculate square of value - mean
         function sd_square($x, $mean)
@@ -40,15 +48,17 @@
 
         $percentage_array = [];
         for ($i = 0; $i < count($all_subject_students); $i++) {
-            $mark = 0.0;
-            $total = 0.0;
+            $total_marks = 0.0;
+            $total_weightage = 0.0;
+            $percentage = 0.0;
             for ($j = 0; $j < count($marks); $j++)
                 for ($k = 0; $k < count($assessments); $k++)
                     if ($marks[$j]->student_id == $all_subject_students[$i]->id and $marks[$j]->assessment_id == $assessments[$k]->id) {
-                        $mark += $marks[$j]->marks;
-                        $total += $assessments[$k]->max_marks;
+                        $total_weightage += $assessments[$k]->weightage;
+                        $total_marks += $marks[$j]->marks / $assessments[$k]->max_marks * $assessments[$k]->weightage;
                     }
-            $percentage = $mark / $total * 100;
+            if ($total_weightage != 0)
+                $percentage = $total_marks / $total_weightage * 100;
             array_push($percentage_array, $percentage);
         }
         sort($percentage_array);
@@ -71,8 +81,12 @@
             if ($percentage_array_without_failures[$i] >= $start and $percentage_array_without_failures[$i] <= $stop)
                 array_push($percentage_array_without_outliers, $percentage_array_without_failures[$i]);
 
-        $mean = array_sum($percentage_array_without_outliers) / count($percentage_array_without_outliers);
-        $stdev = sd($percentage_array_without_outliers);
+        $mean = 0.0;
+        $stdev = 0.0;
+        if (count($percentage_array_without_outliers) != 0) {
+            $mean = array_sum($percentage_array_without_outliers) / count($percentage_array_without_outliers);
+            $stdev = sd($percentage_array_without_outliers);
+        }
         ?>
         <div align="center">
             <div class="panel panel-subject" align="center"
@@ -106,76 +120,109 @@
                     </div>
                 </div>
             @endif
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Overall Result</div>
-                            <div class="panel-body" align="left">
-                                <label class="col-md-3">
-                                    <div style="font-weight: bolder; color: black">
-                                        Name
-                                    </div>
-                                </label>
-                                <label class="col-md-3">
-                                    <div style="font-weight: bolder; color: black">
-                                        Percentage
-                                    </div>
-                                </label>
-                                <label class="col-md-3">
-                                    <div style="font-weight: bolder; color: black">
-                                        Grade
-                                    </div>
-                                </label>
-                                <br>
-                                <br>
-                                @foreach($students as $student)
-                                    <div style="background-color: white; border-color: #3498db">
-                                        <label class="col-md-3">{{$student->name}}</label>
-                                        <?php
-                                        $temp = 0.0;
-                                        $total = 0.0;
-                                        $count = 0.0;
-                                        for ($i = 0; $i < count($marks); $i++) {
-                                            for ($j = 0; $j < count($assessments); $j++) {
-                                                if ($marks[$i]->student_id == $student->id) {
-                                                    if ($marks[$i]->assessment_id == $assessments[$j]->id) {
-                                                        $temp += $marks[$i]->marks / $assessments[$j]->max_marks * $assessments[$j]->weightage;
-                                                        $total += $assessments[$j]->weightage;
-                                                    }
-                                                } else {
-                                                }
-                                            }
+            <div class="col-md-12" style="margin-left: 12.5%;width: 75%;margin-top:5%;">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                        <tr style="background-color: {{$color_array[$random_color]}};color: #fff">
+                            <th>Name</th>
+                            <th>Perentage</th>
+                            <th>Grade</th>
+                        </tr>
+                        </thead>
+                        @foreach($students as $student)
+                            <tbody>
+                            <tr class="odd gradeX">
+                                <td>{{$student->name}}</td>
+                                <?php
+                                $percentage = 0.0;
+                                $total_weightage = 0.0;
+                                $total_marks = 0.0;
+                                for ($i = 0; $i < count($marks); $i++) {
+                                    for ($j = 0; $j < count($assessments); $j++) {
+                                        if ($marks[$i]->student_id == $student->id && $marks[$i]->assessment_id == $assessments[$j]->id) {
+                                            $total_marks += $marks[$i]->marks / $assessments[$j]->max_marks * $assessments[$j]->weightage;
+                                            $total_weightage += $assessments[$j]->weightage;
                                         }
-                                        if ($total != 0)
-                                            $temp = $temp / $total * 100;
-                                        ?>
-                                        <label class="col-md-3">{{$temp}}%</label>
-                                        <?php
-                                        $grade = "";
-                                        if ($temp >= $mean + 1.5 * $stdev)
-                                            $grade = "A+";
-                                        else if ($mean + 1.5 * $stdev > $temp and $temp >= $mean + 0.5 * $stdev)
-                                            $grade = "A";
-                                        else if ($mean + 0.5 * $stdev > $temp and $temp >= $mean)
-                                            $grade = "B+";
-                                        else if ($mean > $temp and $temp >= $mean - 0.5 * $stdev)
-                                            $grade = "B";
-                                        else if ($mean - 0.5 * $stdev > $temp and $temp >= $mean - $stdev)
-                                            $grade = "C";
-                                        else
-                                            $grade = "D";
-                                        if ($temp < 40)
-                                            $grade = "F";
-                                        ?>
-                                        <label class="col-md-3">{{$grade}}</label>
-                                    </div>
-                                    <br>
-                                    <br>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
+                                    }
+                                }
+                                if ($total_weightage != 0)
+                                    $percentage = $total_marks / $total_weightage * 100;
+                                ?>
+                                <td>{{round($percentage,2)}}%</td>
+                                <?php
+                                $grade = "";
+                                if ($percentage >= $mean + 1.5 * $stdev) {
+                                    $grade = "A+";
+                                    $count_Aplus++;
+                                } else if ($mean + 1.5 * $stdev > $percentage and $percentage >= $mean + 0.5 * $stdev) {
+                                    $grade = "A";
+                                    $count_A++;
+                                } else if ($mean + 0.5 * $stdev > $percentage and $percentage >= $mean) {
+                                    $grade = "B+";
+                                    $count_Bplus++;
+                                } else if ($mean > $percentage and $percentage >= $mean - 0.5 * $stdev) {
+                                    $grade = "B";
+                                    $count_B++;
+                                } else if ($mean - 0.5 * $stdev > $percentage and $percentage >= $mean - $stdev) {
+                                    $grade = "C";
+                                    $count_C++;
+                                } else if ($percentage < $mean - $stdev and $percentage >= 40) {
+                                    $grade = "D";
+                                    $count_D++;
+                                }
+                                if ($percentage < 40) {
+                                    $grade = "F";
+                                    $count_F++;
+                                }
+                                ?>
+                                <td>{{$grade}}</td>
+                            </tr>
+                            </tbody>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-12" style="margin-left: 25%;width: 50%;margin-top:5%;margin-bottom: 5%;">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                        <tr style="background-color: {{$color_array[$random_color]}};color: #fff">
+                            <th>Grade</th>
+                            <th>Frequency</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="odd gradeX">
+                            <td>A+</td>
+                            <td>{{$count_Aplus}}</td>
+                        </tr>
+                        <tr class="odd gradeX">
+                            <td>A</td>
+                            <td>{{$count_A}}</td>
+                        </tr>
+                        <tr class="odd gradeX">
+                            <td>B+</td>
+                            <td>{{$count_Bplus}}</td>
+                        </tr>
+                        <tr class="odd gradeX">
+                            <td>B</td>
+                            <td>{{$count_B}}</td>
+                        </tr>
+                        <tr class="odd gradeX">
+                            <td>C</td>
+                            <td>{{$count_C}}</td>
+                        </tr>
+                        <tr class="odd gradeX">
+                            <td>D</td>
+                            <td>{{$count_D}}</td>
+                        </tr>
+                        <tr class="odd gradeX">
+                            <td>F</td>
+                            <td>{{$count_F}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -54,7 +54,7 @@
                         {{--</a>--}}
                         {{--</li>--}}
                         <li>
-                            <a href="#">
+                            <a href="{{route('student.semester_report')}}">
                                 Semester Report
                             </a>
                         </li>

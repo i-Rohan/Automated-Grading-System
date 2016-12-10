@@ -22,11 +22,8 @@
         </div>
     @else
         <?php
-        $color_array = array('#1abc9c', '#2ecc71', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c');
+        $color_array = array('#16a085', '#27ae60', '#2980b9');
         $random_color = rand(0, count($color_array) - 1);
-        $color = 0;
-        if ($random_color == 0)
-            $color = 1;
 
         // Function to calculate square of value - mean
         function sd_square($x, $mean)
@@ -43,15 +40,20 @@
 
         $percentage_array = [];
         for ($i = 0; $i < count($all_subject_students); $i++) {
-            $mark = 0.0;
-            $total = 0.0;
+            $total_marks = 0.0;
+            $total_weightage = 0.0;
+            $percentage = 0.0;
             for ($j = 0; $j < count($marks); $j++)
                 for ($k = 0; $k < count($assessments); $k++)
                     if ($marks[$j]->student_id == $all_subject_students[$i]->id and $marks[$j]->assessment_id == $assessments[$k]->id) {
-                        $mark += $marks[$j]->marks;
-                        $total += $assessments[$k]->max_marks;
+                        $mark = $marks[$j]->marks;
+                        $total = $assessments[$k]->max_marks;
+                        $weightage = $assessments[$k]->weightage;
+                        $total_weightage += $weightage;
+                        $total_marks += $mark / $total * $weightage;
                     }
-            $percentage = $mark / $total * 100;
+            if ($total_weightage != 0)
+                $percentage = $total_marks / $total_weightage * 100;
             array_push($percentage_array, $percentage);
         }
         sort($percentage_array);
@@ -74,8 +76,13 @@
             if ($percentage_array_without_failures[$i] >= $start and $percentage_array_without_failures[$i] <= $stop)
                 array_push($percentage_array_without_outliers, $percentage_array_without_failures[$i]);
 
-        $mean = array_sum($percentage_array_without_outliers) / count($percentage_array_without_outliers);
-        $stdev = sd($percentage_array_without_outliers);
+        $mean = 0.0;
+        $stdev = 0.0;
+        if (count($percentage_array_without_outliers) != 0) {
+            $mean = array_sum($percentage_array_without_outliers) / count($percentage_array_without_outliers);
+            $stdev = sd($percentage_array_without_outliers);
+        }
+        $percentage = 0.0;
         ?>
         <div align="center">
             <div class="panel panel-subject" align="center"
@@ -98,63 +105,67 @@
                     </div>
                 </div>
             @endif
-            <div class="container">
-                <div class="margin">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Overall Result</div>
-                        <div class="panel-body" align="center">
-                            <?php
-                            $total_marks = 0.0;
-                            $total_weightage = 0.0;
-                            ?>
-                            @foreach($assessments as $assessment)
-                                @if($assessment->subject_id==$subject->id)
-                                    <div class="panel panel-subject" align="center"
-                                         style="background-color: {{$color_array[$color]}}; border-color: {{$color_array[$color]}}">
-                                        <div class="subject-name">
-                                            {{$assessment->assessment_name}}
-                                        </div>
-                                        <div class="teacher-name">
-                                            Weightage: {{$assessment->weightage}}%
-                                            <br>
-                                            <?php $marks_obtained = 0.0;?>
-                                            @foreach($marks as $mark)
-                                                @if($mark->student_id==Auth::user()->id && $mark->assessment_id==$assessment->id)
-                                                    <?php
-                                                    $marks_obtained = $mark->marks;
-                                                    $total_marks += $marks_obtained;
-                                                    $total_weightage += $assessment->max_marks;
-                                                    ?>
-                                                    Marks Obtained: {{$mark->marks}}/{{$assessment->max_marks}}
-                                                @endif
-                                            @endforeach
-                                            <br>
-                                            {{$marks_obtained/$assessment->max_marks*$assessment->weightage}}
-                                            /{{$assessment->weightage}}
-                                        </div>
-                                    </div>
-                                    <?php
-                                    $color++;
-                                    while ($color == $random_color) {
-                                        $color++;
-                                        if ($color >= count($color_array))
-                                            $color = 0;
-                                    }
-                                    ?>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
+            <div class="col-md-12" style="margin-left: 12.5%;width: 75%;margin-top:5%;">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                        <tr style="background-color: {{$color_array[$random_color]}};color: #fff">
+                            <th>Assessment</th>
+                            <th>Marks</th>
+                            <th>Weightage</th>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        @foreach($assessments as $assessment)
+                            <tbody>
+                            <tr class="odd gradeX">
+                                <td>{{$assessment->assessment_name}}</td>
+                                @foreach($marks as $mark)
+                                    @if($mark->student_id==Auth::user()->id && $mark->assessment_id==$assessment->id)
+                                        <td>{{$mark->marks}}/{{$assessment->max_marks}}</td>
+                                        <td>{{$assessment->weightage}}%</td>
+                                        <td>{{$mark->marks/$assessment->max_marks*$assessment->weightage}}
+                                            /{{$assessment->weightage}}</td>
+                                    @endif
+                                @endforeach
+                            </tr>
+                            </tbody>
+                        @endforeach
+                    </table>
                 </div>
             </div>
+            <?php
+            $marks_obtained = 0.0;
+            $total_weightage = 0.0;
+            ?>
+            @foreach($assessments as $assessment)
+                @if($assessment->subject_id==$subject->id)
+                    <?php
+                    $flag = false;
+                    ?>
+                    @foreach($marks as $mark)
+                        @if($mark->student_id==Auth::user()->id && $mark->assessment_id==$assessment->id)
+                            <?php
+                            $marks_obtained += $mark->marks / $assessment->max_marks * $assessment->weightage;
+                            $total_weightage += $assessment->weightage;
+                            $flag = true;
+                            ?>
+                        @endif
+                    @endforeach
+                @endif
+            @endforeach
             <div align="center">
                 <div class="panel panel-subject" align="center"
                      style="background-color: {{$color_array[$random_color]}}; border-color: {{$color_array[$random_color]}}">
                     <div class="subject-name">
                         Total Assessment
                     </div>
-                    <?php $temp = $total_marks / $total_weightage * 100;?>
-                    Percentage: {{round($total_marks/$total_weightage*100,2)}}%
+                    <?php
+                    $temp = 0.0;
+                    if ($total_weightage != 0)
+                        $temp = $marks_obtained / $total_weightage * 100;
+                    ?>
+                    Percentage: {{round($temp,2)}}%
                     <?php
                     $grade = "";
                     if ($temp >= $mean + 1.5 * $stdev)
