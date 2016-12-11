@@ -55,4 +55,8 @@ Route::post('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_
 Route::get('/home/teacher/subject/{subject_id}_{stream}/overall', ['as' => 'teacher.overall',
     'uses' => 'OverallController@show']);
 
-Route::get('/home/student/semester_report', ['as' => 'student.semester_report', 'uses' => 'SemesterReportController@index']);
+Route::get('/home/student/semester_report', ['as' => 'student.semester_report',
+    'uses' => 'SemesterReportController@index']);
+
+Route::get('/home/student/grade_predictor', ['as' => 'student.grade_predictor',
+    'uses' => 'GradePredictorController@index']);

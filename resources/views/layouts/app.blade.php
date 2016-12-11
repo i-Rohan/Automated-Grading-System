@@ -48,14 +48,14 @@
                 <ul class="nav navbar-nav">
                     @if(Auth::guest())
                     @elseif(Auth::user()->authority_level=="student")
-                        {{--<li>--}}
-                        {{--<a href="#">--}}
-                        {{--Grade Predictor Tool--}}
-                        {{--</a>--}}
-                        {{--</li>--}}
                         <li>
                             <a href="{{route('student.semester_report')}}">
                                 Semester Report
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('student.grade_predictor')}}">
+                                Grade Predictor Tool
                             </a>
                         </li>
                     @endif
