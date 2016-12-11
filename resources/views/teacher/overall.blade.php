@@ -126,7 +126,11 @@
                         <thead>
                         <tr style="background-color: {{$color_array[$random_color]}};color: #fff">
                             <th>Name</th>
-                            <th>Perentage</th>
+                            @foreach($assessments as $assessment)
+                                <th>{{$assessment->assessment_name}}</th>
+                            @endforeach
+                            <th>Total</th>
+                            <th>Percentage</th>
                             <th>Grade</th>
                         </tr>
                         </thead>
@@ -138,14 +142,22 @@
                                 $percentage = 0.0;
                                 $total_weightage = 0.0;
                                 $total_marks = 0.0;
-                                for ($i = 0; $i < count($marks); $i++) {
-                                    for ($j = 0; $j < count($assessments); $j++) {
-                                        if ($marks[$i]->student_id == $student->id && $marks[$i]->assessment_id == $assessments[$j]->id) {
-                                            $total_marks += $marks[$i]->marks / $assessments[$j]->max_marks * $assessments[$j]->weightage;
-                                            $total_weightage += $assessments[$j]->weightage;
-                                        }
-                                    }
-                                }
+                                ?>
+                                @foreach($marks as $mark)
+                                    @foreach($assessments as $assessment)
+                                        @if ($mark->student_id == $student->id and $mark->assessment_id == $assessment->id)
+                                            <?php
+                                            $current_marks = $mark->marks / $assessment->max_marks * $assessment->weightage;
+                                            $current_weightage = $assessment->weightage;
+                                            $total_marks += $mark->marks / $assessment->max_marks * $assessment->weightage;
+                                            $total_weightage += $assessment->weightage;
+                                            ?>
+                                            <td>{{$current_marks}}/{{$current_weightage}}</td>
+                                        @endif
+                                    @endforeach
+                                @endforeach
+                                <td>{{$total_marks}}/{{$total_weightage}}</td>
+                                <?php
                                 if ($total_weightage != 0)
                                     $percentage = $total_marks / $total_weightage * 100;
                                 ?>

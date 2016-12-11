@@ -21,7 +21,8 @@
             </a>
         </div>
     @else
-        <?php $color_array = array('#1abc9c', '#2ecc71', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c');
+        <?php
+        $color_array = array('#16a085', '#27ae60', '#2980b9');
         $random_color = rand(0, count($color_array) - 1);
         $color = 0;
         if ($random_color == 0)

@@ -15,7 +15,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading" align="center">Your Courses</div>
                 <div class="panel-body" align="center">
-                    <?php $color_array = array('#1abc9c', '#2ecc71', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c');
+                    <?php
+                    $color_array = array('#16a085', '#27ae60', '#2980b9');
                     $color = 0?>
                     @foreach($subjects as $subject)
                         @if($subject->sem==Auth::user()->sem and $subject->discipline==Auth::user()->discipline and
@@ -55,7 +56,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading" align="center">Your Subjects</div>
                 <div class="panel-body" align="center">
-                    <?php $color_array = array('#1abc9c', '#2ecc71', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c');
+                    <?php
+                    $color_array = array('#16a085', '#27ae60', '#2980b9');
                     $color = 0?>
                     @foreach($subjects as $subject)
                         @if($subject->teacher_id==Auth::user()->id)
