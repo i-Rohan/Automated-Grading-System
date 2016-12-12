@@ -47,7 +47,8 @@
                                     <div class="col-md-6">
                                         <label>
                                             <input type="number" class="form-control" required autofocus min="0"
-                                                   max="10" step="any" name="grade" value="{{$_GET['grade']}}">
+                                                   max="10" step="any" name="grade"
+                                                   value="{{isset($_GET['grade'])?$_GET['grade']:''}}">
                                         </label>
                                     </div>
                                 </div>
@@ -184,19 +185,25 @@
             ?>
         @endforeach
         <?php
+        $flag = false;
         $sgpa = $sem_total / $sem_count;
-        $grade_required = 2 * $_GET['grade'] - $sgpa;
+        if (isset($_GET['grade'])) {
+            $flag = true;
+            $grade_required = 2 * $_GET['grade'] - $sgpa;
+        }
         ?>
-        <div class="margin" align="center">
-            @if($grade_required>=0 and $grade_required<=10)
-                <div class="alert alert-info">
-                    To achieve the desired grade, GPA required next sem is: {{$grade_required}}
-                </div>
-            @else
-                <div class="alert alert-danger">
-                    Desired grade cannot be achieved next semester :(
-                </div>
-            @endif
-        </div>
+        @if($flag)
+            <div class="margin" align="center">
+                @if($grade_required>=0 and $grade_required<=10)
+                    <div class="alert alert-info">
+                        To achieve the desired grade, GPA required next sem is: {{$grade_required}}
+                    </div>
+                @else
+                    <div class="alert alert-danger">
+                        Desired grade cannot be achieved next semester :(
+                    </div>
+                @endif
+            </div>
+        @endif
     @endif
 @endsection

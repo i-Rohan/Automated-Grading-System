@@ -6,10 +6,6 @@
             margin: 0 300px 0;
         }
     </style>
-    {{--<div align="center">--}}
-    {{--<img src="{{URL::to('/')}}/images/bmu_logo.png" alt="BMU Logo" class="img-responsive" height="150"--}}
-    {{--width="150"/>--}}
-    {{--</div>--}}
     @if(Auth::user()->authority_level!="teacher")
         <br>
         <br>
@@ -236,6 +232,56 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div>
+                <?php
+                $hex = $color_array[$random_color];
+                list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
+                ?>
+                <script src="{{URL::to('/')}}/js/Chart.js"></script>
+                <canvas id="myChart"
+                        style="padding-left: 10%; padding-bottom:10%;padding-right: 10%; margin-bottom: 5%"></canvas>
+                <script>
+                    var ctx = document.getElementById("myChart");
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ["A+", "A", "B+", "B", "C", "D", "F"],
+                            datasets: [{
+                                pointHoverBorderWidth: 2,
+                                pointBackgroundColor: "#fff",
+                                pointBorderWidth: 1,
+                                pointHoverRadius: 10,
+                                pointRadius: 5,
+                                label: 'Frequency of Grades',
+                                data: [
+                                    {{$count_Aplus}},
+                                    {{$count_A}},
+                                    {{$count_Bplus}},
+                                    {{$count_B}},
+                                    {{$count_C}},
+                                    {{$count_D}},
+                                    {{$count_F}}],
+                                backgroundColor: "rgba({{$r}},{{$g}},{{$b}},0.25)",
+                                borderColor: "rgba({{$r}},{{$g}},{{$b}},0.75)",
+                                pointBorderColor: "rgba({{$r}},{{$g}},{{$b}},1)",
+                                pointHoverBackgroundColor: "rgba({{$r}},{{$g}},{{$b}},1)",
+                                pointHoverBorderColor: "rgba(220,220,220,1)",
+                                borderWidth: 2.5
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                </script>
             </div>
         </div>
     @endif

@@ -6,10 +6,6 @@
             margin: 5px 0 25px;
         }
     </style>
-    {{--<div align="center">--}}
-    {{--<img src="{{URL::to('/')}}/images/bmu_logo.png" alt="BMU Logo" class="img-responsive" height="150"--}}
-    {{--width="150"/>--}}
-    {{--</div>--}}
     @if(Auth::user()->authority_level!="student")
         <br>
         <br>
@@ -59,6 +55,11 @@
         sort($percentage_array);
         $count = count($percentage_array);
 
+        $min = min($percentage_array);
+        $average = 0.0;
+        if (count($percentage_array))
+            $average = array_sum($percentage_array) / count($percentage_array);
+        $max = max($percentage_array);
         $percentage_array_without_failures = [];
         for ($i = 0; $i < count($percentage_array); $i++)
             if ($percentage_array[$i] >= 40)
@@ -164,6 +165,7 @@
                     $temp = 0.0;
                     if ($total_weightage != 0)
                         $temp = $marks_obtained / $total_weightage * 100;
+                    $percentage = $temp;
                     ?>
                     Percentage: {{round($temp,2)}}%
                     <?php
@@ -186,6 +188,63 @@
                     <br>
                     Grade: {{$grade}}
                 </div>
+            </div>
+            <div>
+                <script src="{{URL::to('/')}}/js/Chart.js"></script>
+                <canvas id="myChart"
+                        style="margin-top:2.5%;padding-left: 10%; padding-bottom:2.5%;padding-right: 10%; margin-bottom: 5%"></canvas>
+                <script>
+                    var ctx = document.getElementById("myChart");
+                    var data = {
+                        labels: ["Min", "Average", "Max", "You"],
+                        datasets: [
+                            {
+                                label: "Percentage",
+                                hoverBackgroundColor:[
+                                    'rgba(231, 76, 60, 0.5)',
+                                    'rgba(241, 196, 15, 0.5)',
+                                    'rgba(46, 204, 113, 0.5)',
+                                    'rgba(52, 152, 219, 0.5)'
+                                ],
+                                backgroundColor: [
+                                    'rgba(231, 76, 60, 0.25)',
+                                    'rgba(241, 196, 15, 0.25)',
+                                    'rgba(46, 204, 113, 0.25)',
+                                    'rgba(52, 152, 219, 0.25)'
+                                ],
+                                borderColor: [
+                                    'rgba(231, 76, 60,.75)',
+                                    'rgba(241, 196, 15,.75)',
+                                    'rgba(46, 204, 113, .75)',
+                                    'rgba(52, 152, 219, .75)'
+                                ],
+                                hoverBorderColor:[
+                                    'rgba(231, 76, 60,1)',
+                                    'rgba(241, 196, 15,1)',
+                                    'rgba(46, 204, 113, 1)',
+                                    'rgba(52, 152, 219, 1)'
+                                ],
+                                hoverBorderWidth:5,
+                                borderWidth: 2,
+                                data: [{{round($min,2)}}, {{round($average,2)}}, {{round($max,2)}}, {{round($percentage,2)}}]
+                            }
+                        ]
+                    };
+                    new Chart(ctx, {
+                        type: "bar",
+                        data: data,
+                        options: {
+                            scales: {
+                                xAxes: [{
+                                    stacked: true
+                                }],
+                                yAxes: [{
+                                    stacked: true
+                                }]
+                            }
+                        }
+                    });
+                </script>
             </div>
         </div>
     @endif

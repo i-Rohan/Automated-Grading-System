@@ -28,6 +28,7 @@
             // square root of sum of squares divided by N
             return sqrt(array_sum(array_map("sd_square", $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array)));
         }
+
         ?>
         <div align="center">
             <div class="panel panel-subject" align="center"
