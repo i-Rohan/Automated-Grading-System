@@ -34,9 +34,9 @@ Route::get('/home/teacher/subject/{subject_id}_{stream}/assessment/{assessment_i
 Route::post('/home/teacher/subject/{id1}/assessment/{id2}', ['as' => 'teacher.assessment.create',
     'uses' => 'AssessmentController@create']);
 
-Route::get('/home/admin/add_subject', ['as' => 'admin.add_subject', 'uses' => 'AddSubjectController@index']);
+Route::get('/home/admin/add_subject', ['as' => 'admin.add_subject', 'uses' => 'AddOrEditSubjectController@index']);
 
-Route::post('/home/admin/add_subject', ['as' => 'admin.add_subject.create', 'uses' => 'AddSubjectController@create']);
+Route::post('/home/admin/add_subject', ['as' => 'admin.add_subject.create', 'uses' => 'AddOrEditSubjectController@create']);
 
 Route::post('/home/teacher/subject/add_marks', ['as' => 'teacher.add_marks.create',
     'uses' => 'AddOrEditMarksController@create']);
@@ -60,3 +60,15 @@ Route::get('/home/student/semester_report', ['as' => 'student.semester_report',
 
 Route::get('/home/student/grade_predictor', ['as' => 'student.grade_predictor',
     'uses' => 'GradePredictorController@index']);
+
+Route::get('/home/admin/subjects', ['as' => 'admin.subjects',
+    'uses' => 'AddOrEditSubjectController@show_all']);
+
+Route::get('/home/admin/edit_subject/{id}', ['as' => 'admin.edit_subject',
+    'uses' => 'AddOrEditSubjectController@show']);
+
+Route::post('/home/admin/edit_subject/{id}/edit',['as' => 'admin.edit_subject.edit',
+    'uses' => 'AddOrEditSubjectController@edit']);
+
+Route::post('/home/admin/edit_subject/{id}/delete',['as' => 'admin.edit_subject.delete',
+    'uses' => 'AddOrEditSubjectController@delete']);

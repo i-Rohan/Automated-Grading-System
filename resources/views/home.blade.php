@@ -3,7 +3,7 @@
 @section('content')
     <style>
         div.margin {
-            margin: 5px 50px 100px;
+            margin: 10px 30px 10px;
         }
     </style>
     <div align="center">
@@ -114,6 +114,13 @@
                         <div class="panel panel-subject" align="center">
                             <div class="subject-name">
                                 Add Subject
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{URL::to('/')}}/home/admin/subjects?batch=Any&sem=Any">
+                        <div class="panel panel-subject" align="center">
+                            <div class="subject-name">
+                                Edit Subject
                             </div>
                         </div>
                     </a>

@@ -44,18 +44,23 @@
 
         $percentage_array = [];
         for ($i = 0; $i < count($all_subject_students); $i++) {
-            $total_marks = 0.0;
-            $total_weightage = 0.0;
-            $percentage = 0.0;
-            for ($j = 0; $j < count($marks); $j++)
-                for ($k = 0; $k < count($assessments); $k++)
-                    if ($marks[$j]->student_id == $all_subject_students[$i]->id and $marks[$j]->assessment_id == $assessments[$k]->id) {
-                        $total_weightage += $assessments[$k]->weightage;
-                        $total_marks += $marks[$j]->marks / $assessments[$k]->max_marks * $assessments[$k]->weightage;
-                    }
-            if ($total_weightage != 0)
-                $percentage = $total_marks / $total_weightage * 100;
-            array_push($percentage_array, $percentage);
+            $streams = json_decode((html_entity_decode($subject->stream, true)));
+            for ($x = 0; $x < count($streams); $x++) {
+                if ($streams[$x] == $all_subject_students[$i]->stream) {
+                    $total_marks = 0.0;
+                    $total_weightage = 0.0;
+                    $percentage = 0.0;
+                    for ($j = 0; $j < count($marks); $j++)
+                        for ($k = 0; $k < count($assessments); $k++)
+                            if ($marks[$j]->student_id == $all_subject_students[$i]->id and $marks[$j]->assessment_id == $assessments[$k]->id) {
+                                $total_weightage += $assessments[$k]->weightage;
+                                $total_marks += round($marks[$j]->marks / $assessments[$k]->max_marks * $assessments[$k]->weightage);
+                            }
+                    if ($total_weightage != 0)
+                        $percentage = $total_marks / $total_weightage * 100;
+                    array_push($percentage_array, $percentage);
+                }
+            }
         }
         sort($percentage_array);
         $count = count($percentage_array);
@@ -143,9 +148,9 @@
                                     @foreach($assessments as $assessment)
                                         @if ($mark->student_id == $student->id and $mark->assessment_id == $assessment->id)
                                             <?php
-                                            $current_marks = $mark->marks / $assessment->max_marks * $assessment->weightage;
+                                            $current_marks = round($mark->marks / $assessment->max_marks * $assessment->weightage);
                                             $current_weightage = $assessment->weightage;
-                                            $total_marks += $mark->marks / $assessment->max_marks * $assessment->weightage;
+                                            $total_marks += $current_marks;
                                             $total_weightage += $assessment->weightage;
                                             ?>
                                             <td>{{$current_marks}}/{{$current_weightage}}</td>

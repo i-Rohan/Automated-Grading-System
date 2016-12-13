@@ -6,10 +6,6 @@
             margin: 5px 50px 25px;
         }
     </style>
-    {{--<div align="center">--}}
-    {{--<img src="{{URL::to('/')}}/images/bmu_logo.png" alt="BMU Logo" class="img-responsive" height="150"--}}
-    {{--width="150"/>--}}
-    {{--</div>--}}
     @if(Auth::user()->authority_level!="teacher")
         <br>
         <br>

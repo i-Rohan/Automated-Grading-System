@@ -36,21 +36,26 @@
 
         $percentage_array = [];
         for ($i = 0; $i < count($all_subject_students); $i++) {
-            $total_marks = 0.0;
-            $total_weightage = 0.0;
-            $percentage = 0.0;
-            for ($j = 0; $j < count($marks); $j++)
-                for ($k = 0; $k < count($assessments); $k++)
-                    if ($marks[$j]->student_id == $all_subject_students[$i]->id and $marks[$j]->assessment_id == $assessments[$k]->id) {
-                        $mark = $marks[$j]->marks;
-                        $total = $assessments[$k]->max_marks;
-                        $weightage = $assessments[$k]->weightage;
-                        $total_weightage += $weightage;
-                        $total_marks += $mark / $total * $weightage;
-                    }
-            if ($total_weightage != 0)
-                $percentage = $total_marks / $total_weightage * 100;
-            array_push($percentage_array, $percentage);
+            $streams = json_decode((html_entity_decode($subject->stream, true)));
+            for ($x = 0; $x < count($streams); $x++) {
+                if ($streams[$x] == $all_subject_students[$i]->stream) {
+                    $total_marks = 0.0;
+                    $total_weightage = 0.0;
+                    $percentage = 0.0;
+                    for ($j = 0; $j < count($marks); $j++)
+                        for ($k = 0; $k < count($assessments); $k++)
+                            if ($marks[$j]->student_id == $all_subject_students[$i]->id and $marks[$j]->assessment_id == $assessments[$k]->id) {
+                                $mark = $marks[$j]->marks;
+                                $total = $assessments[$k]->max_marks;
+                                $weightage = $assessments[$k]->weightage;
+                                $total_weightage += $weightage;
+                                $total_marks += round($mark / $total * $weightage);
+                            }
+                    if ($total_weightage != 0)
+                        $percentage = $total_marks / $total_weightage * 100;
+                    array_push($percentage_array, $percentage);
+                }
+            }
         }
         sort($percentage_array);
         $count = count($percentage_array);
@@ -125,7 +130,7 @@
                                     @if($mark->student_id==Auth::user()->id && $mark->assessment_id==$assessment->id)
                                         <td>{{$mark->marks}}/{{$assessment->max_marks}}</td>
                                         <td>{{$assessment->weightage}}%</td>
-                                        <td>{{$mark->marks/$assessment->max_marks*$assessment->weightage}}
+                                        <td>{{round($mark->marks/$assessment->max_marks*$assessment->weightage)}}
                                             /{{$assessment->weightage}}</td>
                                     @endif
                                 @endforeach
@@ -147,7 +152,7 @@
                     @foreach($marks as $mark)
                         @if($mark->student_id==Auth::user()->id && $mark->assessment_id==$assessment->id)
                             <?php
-                            $marks_obtained += $mark->marks / $assessment->max_marks * $assessment->weightage;
+                            $marks_obtained += round($mark->marks / $assessment->max_marks * $assessment->weightage);
                             $total_weightage += $assessment->weightage;
                             $flag = true;
                             ?>
@@ -200,7 +205,7 @@
                         datasets: [
                             {
                                 label: "Percentage",
-                                hoverBackgroundColor:[
+                                hoverBackgroundColor: [
                                     'rgba(231, 76, 60, 0.5)',
                                     'rgba(241, 196, 15, 0.5)',
                                     'rgba(46, 204, 113, 0.5)',
@@ -218,13 +223,13 @@
                                     'rgba(46, 204, 113, .75)',
                                     'rgba(52, 152, 219, .75)'
                                 ],
-                                hoverBorderColor:[
+                                hoverBorderColor: [
                                     'rgba(231, 76, 60,1)',
                                     'rgba(241, 196, 15,1)',
                                     'rgba(46, 204, 113, 1)',
                                     'rgba(52, 152, 219, 1)'
                                 ],
-                                hoverBorderWidth:5,
+                                hoverBorderWidth: 5,
                                 borderWidth: 2,
                                 data: [{{round($min,2)}}, {{round($average,2)}}, {{round($max,2)}}, {{round($percentage,2)}}]
                             }

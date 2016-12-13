@@ -88,7 +88,7 @@
                                             if ($marks[$i]->student_id == Auth::user()->id and $marks[$i]->subject_id == $subject->id) {
                                                 for ($j = 0; $j < count($assessments); $j++) {
                                                     if ($assessments[$j]->id == $marks[$i]->assessment_id) {
-                                                        $user_marks += $marks[$i]->marks / $assessments[$j]->max_marks * $assessments[$j]->weightage;
+                                                        $user_marks += round($marks[$i]->marks / $assessments[$j]->max_marks * $assessments[$j]->weightage);
                                                         $user_total += $assessments[$j]->weightage;
                                                     }
                                                 }
@@ -114,7 +114,7 @@
                                                 for ($k = 0; $k < count($assessments); $k++)
                                                     if ($marks[$j]->student_id == $students[$i]->id and $marks[$j]->assessment_id == $assessments[$k]->id and $marks[$j]->subject_id == $subject->id) {
                                                         $total_weightage += $assessments[$k]->weightage;
-                                                        $total_marks += $marks[$j]->marks / $assessments[$k]->max_marks * $assessments[$k]->weightage;
+                                                        $total_marks += round($marks[$j]->marks / $assessments[$k]->max_marks * $assessments[$k]->weightage);
                                                     }
                                             if ($total_weightage != 0)
                                                 $percentage_woosh = $total_marks / $total_weightage * 100;

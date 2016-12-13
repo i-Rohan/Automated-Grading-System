@@ -22,8 +22,7 @@ class OverallController extends Controller
 
     public function show($subject_id, $stream)
     {
-        $subject = Subjects::where('id', $subject_id)->get(array('id', 'subject_name', 'teacher_id', 'discipline',
-            'stream', 'sem', 'batch'))->first();
+        $subject = Subjects::where('id', $subject_id)->get()->first();
         $assessments = Assessments::where('subject_id', $subject_id)->get();
         $marks = Marks::where('subject_id', $subject_id)->get();
         $students = User::where(array('stream' => $stream, 'batch' => $subject->batch,
