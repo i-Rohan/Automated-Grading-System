@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/', ['middleware' => ['ipcheck'], function () {
+    Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
+}]);
+
 Auth::routes();
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
@@ -67,8 +71,8 @@ Route::get('/home/admin/subjects', ['as' => 'admin.subjects',
 Route::get('/home/admin/edit_subject/{id}', ['as' => 'admin.edit_subject',
     'uses' => 'AddOrEditSubjectController@show']);
 
-Route::post('/home/admin/edit_subject/{id}/edit',['as' => 'admin.edit_subject.edit',
+Route::post('/home/admin/edit_subject/{id}/edit', ['as' => 'admin.edit_subject.edit',
     'uses' => 'AddOrEditSubjectController@edit']);
 
-Route::post('/home/admin/edit_subject/{id}/delete',['as' => 'admin.edit_subject.delete',
+Route::post('/home/admin/edit_subject/{id}/delete', ['as' => 'admin.edit_subject.delete',
     'uses' => 'AddOrEditSubjectController@delete']);

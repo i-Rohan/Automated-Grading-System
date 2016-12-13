@@ -36,9 +36,9 @@
 
         $percentage_array = [];
         for ($i = 0; $i < count($all_subject_students); $i++) {
-            $streams = json_decode((html_entity_decode($subject->stream, true)));
-            for ($x = 0; $x < count($streams); $x++) {
-                if ($streams[$x] == $all_subject_students[$i]->stream) {
+            for ($x = 0; $x < count(json_decode((html_entity_decode($subject->stream, true)))); $x++) {
+
+                {
                     $total_marks = 0.0;
                     $total_weightage = 0.0;
                     $percentage = 0.0;
@@ -111,8 +111,8 @@
                     </div>
                 </div>
             @endif
-            <div class="col-md-12" style="margin-left: 12.5%;width: 75%;margin-top:5%;">
-                <div class="table-responsive">
+            <div class="col-md-12" style="width: 100%;margin-top:5%;">
+                <div class="table-responsive" style="margin-left: 12.5%;margin-right: 12.5%;">
                     <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                         <thead>
                         <tr style="background-color: {{$color_array[$random_color]}};color: #fff">
@@ -160,97 +160,89 @@
                     @endforeach
                 @endif
             @endforeach
-            <div align="center">
-                <div class="panel panel-subject" align="center"
-                     style="background-color: {{$color_array[$random_color]}}; border-color: {{$color_array[$random_color]}}">
-                    <div class="subject-name">
-                        Total Assessment
-                    </div>
-                    <?php
-                    $temp = 0.0;
-                    if ($total_weightage != 0)
-                        $temp = $marks_obtained / $total_weightage * 100;
-                    $percentage = $temp;
-                    ?>
-                    Percentage: {{round($temp,2)}}%
-                    <?php
-                    $grade = "";
-                    if ($temp >= $mean + 1.5 * $stdev)
-                        $grade = "A+";
-                    else if ($mean + 1.5 * $stdev > $temp and $temp >= $mean + 0.5 * $stdev)
-                        $grade = "A";
-                    else if ($mean + 0.5 * $stdev > $temp and $temp >= $mean)
-                        $grade = "B+";
-                    else if ($mean > $temp and $temp >= $mean - 0.5 * $stdev)
-                        $grade = "B";
-                    else if ($mean - 0.5 * $stdev > $temp and $temp >= $mean - $stdev)
-                        $grade = "C";
-                    else
-                        $grade = "D";
-                    if ($temp < 40)
-                        $grade = "F";
-                    ?>
-                    <br>
+            <?php
+            $temp = 0.0;
+            if ($total_weightage != 0)
+                $temp = $marks_obtained / $total_weightage * 100;
+            $percentage = $temp;
+
+            $grade = "";
+            if ($temp >= $mean + 1.5 * $stdev)
+                $grade = "A+";
+            else if ($mean + 1.5 * $stdev > $temp and $temp >= $mean + 0.5 * $stdev)
+                $grade = "A";
+            else if ($mean + 0.5 * $stdev > $temp and $temp >= $mean)
+                $grade = "B+";
+            else if ($mean > $temp and $temp >= $mean - 0.5 * $stdev)
+                $grade = "B";
+            else if ($mean - 0.5 * $stdev > $temp and $temp >= $mean - $stdev)
+                $grade = "C";
+            else
+                $grade = "D";
+            if ($temp < 40)
+                $grade = "F";
+            ?>
+            <div class="panel panel-subject" align="center"
+                 style="background-color: {{$color_array[$random_color]}}; border-color: {{$color_array[$random_color]}}">
+                <div class="subject-name" style="float:left">
                     Grade: {{$grade}}
                 </div>
             </div>
-            <div>
-                <script src="{{URL::to('/')}}/js/Chart.js"></script>
-                <canvas id="myChart"
-                        style="margin-top:2.5%;padding-left: 10%; padding-bottom:2.5%;padding-right: 10%; margin-bottom: 5%"></canvas>
-                <script>
-                    var ctx = document.getElementById("myChart");
-                    var data = {
-                        labels: ["Min", "Average", "Max", "You"],
-                        datasets: [
-                            {
-                                label: "Percentage",
-                                hoverBackgroundColor: [
-                                    'rgba(231, 76, 60, 0.5)',
-                                    'rgba(241, 196, 15, 0.5)',
-                                    'rgba(46, 204, 113, 0.5)',
-                                    'rgba(52, 152, 219, 0.5)'
-                                ],
-                                backgroundColor: [
-                                    'rgba(231, 76, 60, 0.25)',
-                                    'rgba(241, 196, 15, 0.25)',
-                                    'rgba(46, 204, 113, 0.25)',
-                                    'rgba(52, 152, 219, 0.25)'
-                                ],
-                                borderColor: [
-                                    'rgba(231, 76, 60,.75)',
-                                    'rgba(241, 196, 15,.75)',
-                                    'rgba(46, 204, 113, .75)',
-                                    'rgba(52, 152, 219, .75)'
-                                ],
-                                hoverBorderColor: [
-                                    'rgba(231, 76, 60,1)',
-                                    'rgba(241, 196, 15,1)',
-                                    'rgba(46, 204, 113, 1)',
-                                    'rgba(52, 152, 219, 1)'
-                                ],
-                                hoverBorderWidth: 5,
-                                borderWidth: 2,
-                                data: [{{round($min,2)}}, {{round($average,2)}}, {{round($max,2)}}, {{round($percentage,2)}}]
-                            }
-                        ]
-                    };
-                    new Chart(ctx, {
-                        type: "bar",
-                        data: data,
-                        options: {
-                            scales: {
-                                xAxes: [{
-                                    stacked: true
-                                }],
-                                yAxes: [{
-                                    stacked: true
-                                }]
-                            }
+            <script src="{{URL::to('/')}}/js/Chart.js"></script>
+            <canvas id="myChart"
+                    style="margin-top:2.5%;padding-left: 10%; padding-bottom:2.5%;padding-right: 10%; margin-bottom: 5%"></canvas>
+            <script>
+                var ctx = document.getElementById("myChart");
+                var data = {
+                    labels: ["Min", "Average", "Max", "You"],
+                    datasets: [
+                        {
+                            label: "Percentage",
+                            hoverBackgroundColor: [
+                                'rgba(231, 76, 60, 0.5)',
+                                'rgba(241, 196, 15, 0.5)',
+                                'rgba(46, 204, 113, 0.5)',
+                                'rgba(52, 152, 219, 0.5)'
+                            ],
+                            backgroundColor: [
+                                'rgba(231, 76, 60, 0.25)',
+                                'rgba(241, 196, 15, 0.25)',
+                                'rgba(46, 204, 113, 0.25)',
+                                'rgba(52, 152, 219, 0.25)'
+                            ],
+                            borderColor: [
+                                'rgba(231, 76, 60,.75)',
+                                'rgba(241, 196, 15,.75)',
+                                'rgba(46, 204, 113, .75)',
+                                'rgba(52, 152, 219, .75)'
+                            ],
+                            hoverBorderColor: [
+                                'rgba(231, 76, 60,1)',
+                                'rgba(241, 196, 15,1)',
+                                'rgba(46, 204, 113, 1)',
+                                'rgba(52, 152, 219, 1)'
+                            ],
+                            hoverBorderWidth: 5,
+                            borderWidth: 2,
+                            data: [{{round($min,2)}}, {{round($average,2)}}, {{round($max,2)}}, {{round($percentage,2)}}]
                         }
-                    });
-                </script>
-            </div>
+                    ]
+                };
+                new Chart(ctx, {
+                    type: "bar",
+                    data: data,
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                stacked: true
+                            }],
+                            yAxes: [{
+                                stacked: true
+                            }]
+                        }
+                    }
+                });
+            </script>
         </div>
     @endif
 @endsection
