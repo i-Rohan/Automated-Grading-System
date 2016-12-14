@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/', ['middleware' => ['ipcheck'], function () {
-    Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
+
 }]);
 
 Auth::routes();
